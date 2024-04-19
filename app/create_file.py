@@ -9,39 +9,37 @@ def create_file(file_name: str) -> None:
             str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S\n")))
         line_number = 1
         while True:
-            input_content = input("Enter content line:")
+            input_content = input("Enter content line: ")
             if input_content == "stop":
-                file.write("\n")
                 break
 
-            file.write(f"{line_number} {input_content}\n")
+            if line_number > 1:
+                file.write("\n")
+            file.write(f"{line_number} {input_content}")
             line_number += 1
 
 
 def main() -> None:
     cmd_text = sys.argv
 
-    if "-d" in cmd_text and "-f" in cmd_text:
-        index_d = cmd_text.index("-d")
-        index_f = cmd_text.index("-f")
-
-        file_name = cmd_text[index_f + 1]
-
-        correct_path = os.path.join(*cmd_text[index_d + 1: index_f])
-        os.makedirs(correct_path, exist_ok=True)
-        create_file(os.path.join(correct_path, file_name))
-        return
+    correct_path = None
 
     if "-d" in cmd_text:
         index_d = cmd_text.index("-d")
-        correct_path = os.path.join(*cmd_text[index_d + 1:])
+        if "-f" in cmd_text:
+            index_f = cmd_text.index("-f")
+            correct_path = os.path.join(*cmd_text[index_d + 1: index_f])
+        else:
+            correct_path = os.path.join(*cmd_text[index_d + 1:])
         os.makedirs(correct_path, exist_ok=True)
-        return
 
     if "-f" in cmd_text:
         index_f = cmd_text.index("-f")
-        create_file(cmd_text[index_f + 1])
-        return
+        file_name = cmd_text[index_f + 1]
+        if correct_path is None:
+            create_file(file_name)
+        else:
+            create_file(os.path.join(correct_path, file_name))
 
 
 if __name__ == "__main__":
