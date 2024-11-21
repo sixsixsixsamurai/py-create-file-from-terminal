@@ -5,8 +5,10 @@ import datetime
 
 def create_file(file_name: str) -> None:
     with open(file_name, "a") as file:
-        file.write(
-            str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S\n")))
+        if os.path.getsize(file_name) > 0:
+            file.write("\n")
+        file.write(str(
+            datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S\n")))
         line_number = 1
         while True:
             input_content = input("Enter content line: ")
