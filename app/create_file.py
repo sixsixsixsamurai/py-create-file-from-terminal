@@ -20,6 +20,8 @@ def create_file(file_name: str) -> None:
             file.write(f"{line_number} {input_content}")
             line_number += 1
 
+        file.write("\n")
+
 
 def main() -> None:
     cmd_text = sys.argv
